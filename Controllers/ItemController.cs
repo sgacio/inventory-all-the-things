@@ -42,5 +42,15 @@ namespace inventory_all_the_things.Controllers
       context.SaveChanges();
       return entry;
     }
+
+    [HttpPut("{Id}")]
+    public ActionResult<Item> PutItem(int Id, [FromBody]Item entry)
+    {
+      var context = new DatabaseContext();
+      context.Items.Add(entry);
+      context.SaveChanges();
+      return entry;
+
+    }
   }
 }
