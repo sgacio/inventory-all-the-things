@@ -15,7 +15,7 @@ namespace inventory_all_the_things.Controllers
     public ActionResult<IEnumerable<Item>> GetAllItems()
     {
       var context = new DatabaseContext();
-      var theThing = context.Items.OrderByDescending(i => i.SKU);
+      var theThing = context.Items.OrderByDescending(i => i.Id);
       return theThing.ToList();
     }
 
@@ -51,6 +51,20 @@ namespace inventory_all_the_things.Controllers
       context.SaveChanges();
       return entry;
 
+    }
+
+    [HttpDelete("{Id}")]
+    public ActionResult DeleteItem(int Id)
+    {
+      return Ok(Id);
+    }
+
+    [HttpGet]
+    public ActionResult<IEnumerable<Item>> GetOutOfStock()
+    {
+      var context = new DatabaseContext();
+      var theThing = context.Items.OrderByDescending(i => i.NumberInStock == 0);
+      return theThing.ToList();
     }
   }
 }
