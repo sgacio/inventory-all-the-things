@@ -1,4 +1,3 @@
-using System.Linq;
 using System;
 
 namespace inventory_all_the_things.Models
@@ -17,6 +16,6 @@ namespace inventory_all_the_things.Models
 
     public int Price { get; set; }
 
-    public DateTime DateOrdered { get; set; }
+    public DateTime DateOrdered { get; set; } = DateTime.Now;
   }
 }
