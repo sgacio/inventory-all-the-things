@@ -59,11 +59,19 @@ namespace inventory_all_the_things.Controllers
       return Ok(Id);
     }
 
-    [HttpGet]
+    [HttpGet("OutOfStock")]
     public ActionResult<IEnumerable<Item>> GetOutOfStock()
     {
       var context = new DatabaseContext();
       var theThing = context.Items.OrderByDescending(i => i.NumberInStock == 0);
+      return theThing.ToList();
+    }
+
+    [HttpGet("SKU")]
+    public ActionResult<IEnumerable<Item>> GetSKU(int SKU)
+    {
+      var context = new DatabaseContext();
+      var theThing = context.Items.OrderByDescending(i => i.SKU == SKU);
       return theThing.ToList();
     }
   }
