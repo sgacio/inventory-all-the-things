@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using inventory_all_the_things;
 using inventory_all_the_things.Models;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace inventory_all_the_things.Controllers
 {
@@ -11,7 +12,7 @@ namespace inventory_all_the_things.Controllers
   [ApiController]
   public class ItemController : ControllerBase
   {
-    [HttpGet]
+    [HttpGet("all")]
     public ActionResult<IEnumerable<Item>> GetAllItems()
     {
       var context = new DatabaseContext();
@@ -44,19 +45,36 @@ namespace inventory_all_the_things.Controllers
     }
 
     [HttpPut("{Id}")]
-    public ActionResult<Item> PutItem(int Id, [FromBody]Item entry)
+    public ActionResult<Item> PutItem(int Id, [FromBody]Item newDetails)
     {
       var context = new DatabaseContext();
-      context.Items.Add(entry);
-      context.SaveChanges();
-      return entry;
-
+      if (Id != newDetails.Id)
+      {
+        return BadRequest();
+      }
+      else
+      {
+        context.Entry(newDetails).State = EntityState.Modified;
+        context.SaveChanges();
+        return newDetails;
+      }
     }
 
     [HttpDelete("{Id}")]
     public ActionResult DeleteItem(int Id)
     {
-      return Ok(Id);
+      var context = new DatabaseContext();
+      var Item = context.Items.FirstOrDefault(f => f.Id == Id);
+      if (Item == null)
+      {
+        return NotFound();
+      }
+      else
+      {
+        context.Items.Remove(Item);
+        context.SaveChanges();
+        return Ok(Id);
+      }
     }
 
     [HttpGet("OutOfStock")]
